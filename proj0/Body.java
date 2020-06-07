@@ -10,12 +10,17 @@ public class Body {
         this.xxPos = xP;
         this.yyPos = yP;
         this.xxVel = xV;
-        this.mass = yV;
+        this.yyVel = yV;
         this.mass = m;
         this.imgFileName = img;
     }
 
     public Body(Body b) {
-
+        this.xxPos = b.xxPos;
+        this.yyPos = b.yyPos;
+        this.xxVel = b.xxVel;
+        this.yyVel = b.yyVel;
+        this.mass = b.mass;
+        this.imgFileName = b.imgFileName;
     }
 }
