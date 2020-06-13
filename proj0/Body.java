@@ -53,20 +53,12 @@ public class Body {
         double force = this.calcForceExertedBy(b);
         double distance = this.calcDistance(b);
 
-        if( this.xxPos > b.xxPos) {
-            return (force / distance) * (-(b.xxPos - this.xxPos));
-        }
-
         return (force / distance) * (b.xxPos - this.xxPos);
     }
 
     public double calcForceExertedByY(Body b) {
         double force = this.calcForceExertedBy(b);
         double distance = this.calcDistance(b);
-
-        if( this.yyPos > b.yyPos) {
-            return (force / distance) * (-(b.yyPos - this.yyPos));
-        }
 
         return (force / distance) * (b.yyPos - this.yyPos);
     }
