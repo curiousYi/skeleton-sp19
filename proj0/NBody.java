@@ -1,4 +1,11 @@
 public class NBody {
+    private static int bodyCount = 0;
+    private static String filePath;
+    private static double endTime;
+    private static double dt;
+    private static double currentTime = 0;
+    private static Body[] bodies;
+
     public static double readRadius(String filePath) {
         In in = new In(filePath);
         in.readDouble();
@@ -20,21 +27,34 @@ public class NBody {
 
     public static Body[] readBodies(String filePath) {
         In in = new In(filePath);
-        int countOfBodies = in.readInt();
+        if(bodyCount == 0) {
+            bodyCount = in.readInt();
+        }
         double radius = in.readDouble();
-        Body[] bodies = new Body[countOfBodies];
 
-        for(int i=0; i < countOfBodies; i++) {
+        for(int i=0; i < bodyCount; i++) {
            bodies[i] = readBodyLine(in);
         }
 
         return bodies;
     }
 
+    public static void updateLoop(String filePath) {
+        if(bodyCount == 0) {
+            In in = new In(filePath);
+            bodyCount = in.readInt();
+        }
+
+        double[] xForces = new double[bodyCount];
+        double[] yForces = new double[bodyCount];
+    }
+
     public static void main(String[] args) {
-        double time = Double.parseDouble((args[0]));
-        double dt = Double.parseDouble((args[1]));
-        String filePath = args[2];
+        endTime = Double.parseDouble((args[0]));
+        dt = Double.parseDouble((args[1]));
+        double currentTime = 0;
+        filePath = args[2];
+        StdDraw.enableDoubleBuffering();
 
         double radius = readRadius(filePath);
         StdDraw.setXscale(-radius, radius);
@@ -42,7 +62,7 @@ public class NBody {
 
         StdDraw.picture(0,0,"images/starfield.jpg");
 
-        Body[] bodies = readBodies(filePath);
+        bodies = readBodies(filePath);
 
         for(Body body : bodies) {
             body.draw();
