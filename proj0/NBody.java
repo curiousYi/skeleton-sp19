@@ -30,4 +30,22 @@ public class NBody {
 
         return bodies;
     }
+
+    public static void main(String[] args) {
+        double time = Double.parseDouble((args[0]));
+        double dt = Double.parseDouble((args[1]));
+        String filePath = args[2];
+
+        double radius = readRadius(filePath);
+        StdDraw.setXscale(-radius, radius);
+        StdDraw.setYscale(-radius, radius);
+
+        StdDraw.picture(0,0,"images/starfield.jpg");
+
+        Body[] bodies = readBodies(filePath);
+
+        for(Body body : bodies) {
+            body.draw();
+        }
+    }
 }
