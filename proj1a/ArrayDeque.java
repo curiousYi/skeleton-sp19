@@ -1,54 +1,45 @@
 public class ArrayDeque<Item> {
-    private Node<Item> sentinel;
+    private Item[] store;
     private int size;
-    private Node<Item> last;
+    private int capacity;
+    private int cutOff; //when to double
+    private int multiple = 2; //how much we expand stuff by
+    private int lastIndex;
+    private int frontIndex;
+
+    /*
+        High-level how this array will work:
+        -It will be circular. Pointers start out in the middle.
+        -Once it reaches 3/4 capacity it will double.
+        -Once it reaches 1/4 capacity it will reduce in size by half.
+        -TO-DO
+            -figure out if my totally arbitrary optimization makes sense.
+     */
 
     public ArrayDeque() {
-        sentinel = new Node("asdfsdf");
-        last = sentinel;
-        sentinel.next = sentinel;
-        sentinel.prev = sentinel;
+        //https://stackoverflow.com/questions/2927391/whats-the-reason-i-cant-create-generic-array-types-in-java
+        Item[] store =  (Item[]) new Object[8];
+        lastIndex = 3;
+        frontIndex = 3; //we are putting it in the middle
+        
     }
 
     public Item get (int count) {
-        Node<Item> start = sentinel.next;
-        while(count != 0) {
-            start = start.next;
-            count--;
-        }
-        return start.item;
+        return store[0];
     }
 
     public int size () {
-        return size;
-    }
-
-    public class Node<Item> {
-        public Item item;
-        public Node<Item> next;
-        public Node<Item> prev;
-
-        public Node(Item i) {
-            item = i;
-        }
-
+        return store.length;
     }
 
     public void addFirst(Item thing) {
-        Node<Item> tempNode = sentinel.next;
-        Node<Item> newFirst = new Node(thing);
-
-        newFirst.next = tempNode;
-        newFirst.prev = sentinel;
-
-        sentinel.next = newFirst;
-        tempNode.prev = newFirst;
-
-        if(last == tempNode) {
-            last = newFirst;
+        store[frontIndex] = thing;
+        if(frontIndex == 0) {
+            //check if we need to expand the array
+            frontIndex =
+        } else {
+            frontIndex -= 1;
         }
-
-        size = size + 1;
     }
 
     public void addLast(Item thing){
