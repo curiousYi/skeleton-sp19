@@ -22,36 +22,37 @@ public class ArrayDequeTest {
 		ArrayDeque<String> arr = new ArrayDeque();
 
 		boolean passed = arr.size() == 8;
+		System.out.println("Initial Size is 8 Test:");
 		printTestStatus(passed);
-
 	}
 
-	public static void checkProportionalTest() {
+	//TO-DO for addLast but it's basically the same
+
+	public static void checkProportionalAddFirstTest() {
 		//check whether the array is proportional to the actual number of items
 		ArrayDeque<String> arr = new ArrayDeque();
 
 		//could make this math.rand but it might be less robust
 		double count = Math.pow(10, 2);
 
+		int initialSize = arr.size();
+
 		for(int i=1; i <= count; i++) {
 			arr.addFirst("foo");
 		}
 
-		int size = arr.size();
-
-		for(int i=1; i <= count; i++) {
-			arr.removeFirst();
-		}
-		int sizeAfterRemoval = arr.size();
-
-		//assuming it's a multiple of the initial size
+		int sizeAfterAddition = arr.size();
 		boolean passed;
 
-		if(sizeAfterRemoval == 0) {
-			passed = false;
+		if(initialSize != 0 && sizeAfterAddition != 0 && initialSize != sizeAfterAddition && (sizeAfterAddition % initialSize == 0)) {
+			passed = true;
 		} else {
-			passed = size % sizeAfterRemoval == 0;
+			passed = false;
 		}
+
+		//TO-DO replicate removeFirst and notice the symmetry
+
+		System.out.println("Proportional Sizing Test:");
 		printTestStatus(passed);
 	}
 
@@ -131,6 +132,6 @@ public class ArrayDequeTest {
 	public static void main(String[] args) {
 		System.out.println("Running tests.\n");
 		checkInitialSizeTest();
-		checkProportionalTest();
+		checkProportionalAddFirstTest();
 	}
 } 

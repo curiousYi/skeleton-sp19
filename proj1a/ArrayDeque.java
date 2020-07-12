@@ -1,11 +1,10 @@
 public class ArrayDeque<Item> {
     private Item[] store;
-    private int size;
-    private int capacity;
     private int cutOff; //when to double
     private int multiple = 2; //how much we expand stuff by
     private int lastIndex;
     private int frontIndex;
+    private int storeSize;
 
     /*
         High-level how this array will work:
@@ -18,94 +17,142 @@ public class ArrayDeque<Item> {
 
     public ArrayDeque() {
         //https://stackoverflow.com/questions/2927391/whats-the-reason-i-cant-create-generic-array-types-in-java
-        Item[] store =  (Item[]) new Object[8];
-        lastIndex = 3;
-        frontIndex = 3; //we are putting it in the middle
-        
+        this.store =  (Item[]) new Object[8];
+
+        //should always be pointing at an empty slot the index
+        this.lastIndex = 3;
+        this.frontIndex = 3; //we are putting it in the middle
+        this.cutOff = 3 * store.length / 4;
     }
 
-    public Item get (int count) {
-        return store[0];
+
+    private Item[] copyArrayOver(Item[] oldArray, Item[] newArray, boolean isDoubling) {
+        //Note frontIndex and lastIndex will always be empty based on doubling and not doubling!
+        if(isDoubling) {
+            if(frontIndex <= lastIndex) {
+                for (int i = frontIndex + 1; i < lastIndex; i++) {
+                    newArray[i] = oldArray[i];
+                }
+            } else {
+                //mapping everything to the middle
+                int newStart = newArray.length / 4;
+                int newEnd = newArray.length * 3 / 4;
+
+                //checking to see whether the front overloaded and it leaked out on to the tail end
+                for(int i = frontIndex; i < oldArray.length; i++) {
+                    newArray[newStart] = oldArray[i];
+                    newStart++;
+                }
+
+                for(int i = 0; i < lastIndex; i++) {
+                    newArray[newStart] = oldArray[i];
+                    newStart++;
+                }
+
+            }
+        } else {
+
+        }
+        //following scenario
+        //normal frontIndex <= lastIndex
+        // lastIndex > frontIndex
+
+    }
+
+    private void resize(boolean isDoubling) {
+        Item[] newStore;
+
+        if(isDoubling) {
+            newStore = (Item[]) new Object[store.length * multiple];
+        } else {
+            newStore = (Item[]) new Object[store.length / multiple];
+        }
+
+        store = copyArrayOver(store, newStore, isDoubling);
+    }
+
+    public Item get (int index) {
+        return store[index];
     }
 
     public int size () {
-        return store.length;
+        return this.store.length;
     }
 
-    public void addFirst(Item thing) {
-        store[frontIndex] = thing;
-        if(frontIndex == 0) {
-            //check if we need to expand the array
-            frontIndex =
-        } else {
-            frontIndex -= 1;
+    public void runResizeLogic() {
+        if(this.storeSize <= 1/4 * this.size()) {
+            resize(false);
+        } else if (this.storeSize >= 3/4 * this.size()) {
+            resize(true);
         }
     }
 
+    //key observation we just need to maintain the order don't worry about other crap
+    public void addFirst(Item thing) {
+        this.store[frontIndex] = thing;
+
+        this.runResizeLogic();
+    }
+
     public void addLast(Item thing){
-        Node<Item> tempNode = last;
-        Node<Item> newLast = new Node(thing);
+        store[lastIndex] = thing;
+        storeSize++;
 
-        newLast.next = sentinel;
-        newLast.prev = last;
-
-        sentinel.prev = newLast;
-        tempNode.next = newLast;
-
-        last = newLast;
-        size = size + 1;
+        this.runResizeLogic();
     }
 
     public boolean isEmpty() {
-        return size == 0;
+        return frontIndex == lastIndex;
     }
 
     public void printDeque() {
         String thing = "";
-        Node<Item> tracker = sentinel.next;
-
-        for(int i =0; i < size; i++) {
-            thing += tracker.item.toString() + " ";
-            tracker = tracker.next;
-        }
+//        Node<Item> tracker = sentinel.next;
+//
+//        for(int i =0; i < size; i++) {
+//            thing += tracker.item.toString() + " ";
+//            tracker = tracker.next;
+//        }
 
         System.out.println(thing);
     }
 
-    public Item removeFirst() {
-        if(sentinel.next == sentinel) {
-            return null;
-        }
+    //TO-DO
+//    public Item removeFirst() {
+//        if(sentinel.next == sentinel) {
+//            return null;
+//        }
+//
+//        Node<Item> tempNode = sentinel.next;
+//
+//        sentinel.next = sentinel.next.next;
+//        sentinel.next.next.prev = sentinel;
+//
+//        tempNode.next = null;
+//        tempNode.prev = null;
+//        size = size - 1;
+//
+//        return tempNode.item;
+//    }
 
-        Node<Item> tempNode = sentinel.next;
-
-        sentinel.next = sentinel.next.next;
-        sentinel.next.next.prev = sentinel;
-
-        tempNode.next = null;
-        tempNode.prev = null;
-        size = size - 1;
-
-        return tempNode.item;
-    }
-
-    public Item removeLast() {
-        if(last == sentinel) {
-            return null;
-        }
-
-        Node<Item> tempNode = last;
-
-        last = last.prev;
-        last.next = sentinel;
-        sentinel.prev = last;
-
-        tempNode.next = null;
-        tempNode.prev = null;
-        size = size - 1;
-
-        return tempNode.item;
-    }
+    //TO-DO
+//    public Item removeLast() {
+//        if(last == sentinel) {
+//            return null;
+//        }
+//
+//        Node<Item> tempNode = last;
+//
+//        last = last.prev;
+//        last.next = sentinel;
+//        sentinel.prev = last;
+//
+//        tempNode.next = null;
+//        tempNode.prev = null;
+//        size = size - 1;
+//
+//        return tempNode.item;
+//    }
 
     public static void main(String[] args) {
         System.out.println("Running tests.\n");
