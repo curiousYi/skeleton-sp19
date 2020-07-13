@@ -26,40 +26,36 @@ public class ArrayDeque<Item> {
     }
 
 
-    private Item[] copyArrayOver(Item[] oldArray, Item[] newArray, boolean isDoubling) {
+    private Item[] copyArrayOver(Item[] oldArray, Item[] newArray) {
         //Note frontIndex and lastIndex will always be empty based on doubling and not doubling!
-        if(isDoubling) {
-            if(frontIndex <= lastIndex) {
-                for (int i = frontIndex + 1; i < lastIndex; i++) {
-                    newArray[i] = oldArray[i];
-                }
-            } else {
-                //mapping everything to the middle
-                int newStart = newArray.length / 4;
-                int newEnd = newArray.length * 3 / 4;
-
-                //checking to see whether the front overloaded and it leaked out on to the tail end
-                for(int i = frontIndex; i < oldArray.length; i++) {
-                    newArray[newStart] = oldArray[i];
-                    newStart++;
-                }
-
-                for(int i = 0; i < lastIndex; i++) {
-                    newArray[newStart] = oldArray[i];
-                    newStart++;
-                }
-
+        if(frontIndex <= lastIndex) {
+            for (int i = frontIndex + 1; i < lastIndex; i++) {
+                newArray[i] = oldArray[i];
             }
         } else {
+            //mapping everything to the middle
+            int newStart = newArray.length / 4;
+            int newEnd = newArray.length * 3 / 4;
 
+            //checking to see whether the front overloaded and it leaked out on to the tail end
+            for(int i = frontIndex; i < oldArray.length; i++) {
+                newArray[newStart] = oldArray[i];
+                newStart++;
+            }
+
+            for(int i = 0; i < lastIndex; i++) {
+                newArray[newStart] = oldArray[i];
+                newStart++;
+            }
         }
+
+        return newArray;
         //following scenario
         //normal frontIndex <= lastIndex
         // lastIndex > frontIndex
-
     }
 
-    private void resize(boolean isDoubling) {
+    private Item[] resize(boolean isDoubling) {
         Item[] newStore;
 
         if(isDoubling) {
@@ -68,10 +64,11 @@ public class ArrayDeque<Item> {
             newStore = (Item[]) new Object[store.length / multiple];
         }
 
-        store = copyArrayOver(store, newStore, isDoubling);
+       return copyArrayOver(store, newStore);
     }
 
     public Item get (int index) {
+        //first we need to check whether the index is even valid
         return store[index];
     }
 
@@ -80,25 +77,39 @@ public class ArrayDeque<Item> {
     }
 
     public void runResizeLogic() {
-        if(this.storeSize <= 1/4 * this.size()) {
-            resize(false);
+        if(this.size() != 8 && this.storeSize <= 1/4 * this.size()) {
+            this.store = resize(false);
         } else if (this.storeSize >= 3/4 * this.size()) {
-            resize(true);
+            this.store = resize(true);
         }
     }
 
     //key observation we just need to maintain the order don't worry about other crap
     public void addFirst(Item thing) {
         this.store[frontIndex] = thing;
+        this.storeSize++;
 
-        this.runResizeLogic();
+
+        //figure out location of frontIndex
+        if(frontIndex == 0) {
+            this.runResizeLogic();
+            frontIndex = this.size() - 1;
+        } else {
+            frontIndex--;
+        }
     }
 
     public void addLast(Item thing){
-        store[lastIndex] = thing;
-        storeSize++;
+        this.store[lastIndex] = thing;
+        this.storeSize++;
 
-        this.runResizeLogic();
+        //figure out location of frontIndex
+        if(lastIndex == this.size()-1) {
+            this.runResizeLogic();
+            lastIndex = 0;
+        } else {
+            lastIndex++;
+        }
     }
 
     public boolean isEmpty() {
