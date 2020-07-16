@@ -26,26 +26,100 @@ public class ArrayDeque<Item> {
     }
 
 
+    //TO-DO fix this copyOver
     private Item[] copyArrayOver(Item[] oldArray, Item[] newArray) {
         //Note frontIndex and lastIndex will always be empty based on doubling and not doubling!
-        if(frontIndex <= lastIndex) {
-            for (int i = frontIndex + 1; i < lastIndex; i++) {
-                newArray[i] = oldArray[i];
-            }
-        } else {
-            //mapping everything to the middle
-            int newStart = newArray.length / 4;
-            int newEnd = newArray.length * 3 / 4;
 
-            //checking to see whether the front overloaded and it leaked out on to the tail end
-            for(int i = frontIndex; i < oldArray.length; i++) {
-                newArray[newStart] = oldArray[i];
-                newStart++;
-            }
+        //Handling two scenarios
+        //one copying over to a larger array which is the weird frontIndex > or < lastIndex logic
 
-            for(int i = 0; i < lastIndex; i++) {
-                newArray[newStart] = oldArray[i];
-                newStart++;
+        //copying over a smaller array which is more straightforward since it won't step out of bounds based on our constraint
+
+        if(newArray.length > oldArray.length) {
+            int newMiddle = newArray.length / 2 - 1;
+            int oldMiddle = oldArray.length / 2 - 1;
+            if(this.frontIndex > this.lastIndex && (this.frontIndex > oldMiddle)) {
+                int map;
+                int lastNewArrayIndex = newMiddle;
+                for (int i = oldMiddle; i >=0 ; i--) {
+                    map = newMiddle - (oldMiddle - i);
+                    newArray[map] = oldArray[i];
+                }
+
+                for(int j = oldArray.length - 1; j > this.frontIndex; j--) {
+                    map = newMiddle - oldMiddle - 1 - (oldArray.length - 1 - j);
+                    newArray[map] = oldArray[j];
+                    lastNewArrayIndex = map;
+                }
+
+                if(lastNewArrayIndex == 0) {
+                    this.frontIndex = newArray.length-1;
+                } else {
+                    this.frontIndex = lastNewArrayIndex -1;
+                }
+
+                //mapping the tail portion
+                lastNewArrayIndex = newMiddle;
+                for(int k = oldMiddle+1; k < this.lastIndex; k++) {
+                    map = newMiddle + 1 - (k - (oldMiddle + 1));
+                    newArray[map] = oldArray[k];
+                    lastNewArrayIndex = map;
+                }
+                if(lastNewArrayIndex == newArray.length-1) {
+                    this.lastIndex = 0;
+                } else {
+                    this.lastIndex = lastNewArrayIndex + 1;
+                }
+            } else if (this.frontIndex > this.lastIndex && (this.frontIndex < oldMiddle)) {
+                //means the end spilled over
+
+            } else {
+                int map;
+                int lastNewArrayIndex = newMiddle;
+                for (int i = oldMiddle; i >= 0; i--) {
+                    map = newMiddle - (i - oldMiddle);
+                    newArray[map] = oldArray[i];
+                    lastNewArrayIndex = map;
+                }
+
+                if(lastNewArrayIndex == 0) {
+                    this.lastIndex = newArray.length - 1;
+                } else {
+                    this.lastIndex = lastNewArrayIndex - 1;
+                }
+
+                for(int i = oldMiddle+1; i <= this.lastIndex; i++) {
+                    map = newMiddle + 1 + (i - oldMiddle + 1);
+                    newArray[map] = oldArray[i];
+                    lastNewArrayIndex = map;
+                }
+
+                if(lastNewArrayIndex == newArray.length-1) {
+                    this.lastIndex = 0;
+                } else {
+                    this.lastIndex = lastNewArrayIndex + 1;
+                }
+
+            }
+            return newArray;
+        }
+
+
+
+        if(this.frontIndex >= this.lastIndex) {
+            if(newArray.length < oldArray.length) {
+                System.out.println("Not expecting this newArray < oldArray");
+            }
+            if(oldArray.length < newArray.length) {
+
+
+            } else {
+                int oldArrayEndPoint = oldArray.length - 1;
+                int newArrayEndPoint = newArray.length - 1;
+                int countLength = oldArray.length - 1 - this.frontIndex;
+                for(int i = 0 ; i <= countLength; i++) {
+                    newArray[newArrayEndPoint - i] = oldArray[oldArrayEndPoint - i];
+                }
             }
         }
 
@@ -77,28 +151,29 @@ public class ArrayDeque<Item> {
     }
 
     public void runResizeLogic() {
-        if(this.size() != 8 && this.storeSize <= 1/4 * this.size()) {
+        if(this.size() != 8 && this.storeSize < (this.size()/4)) {
             this.store = resize(false);
-        } else if (this.storeSize >= 3/4 * this.size()) {
+        } else if (this.storeSize > (this.size() * 3)/4) {
             this.store = resize(true);
         }
     }
 
     //key observation we just need to maintain the order don't worry about other crap
     public void addFirst(Item thing) {
-        this.store[frontIndex] = thing;
+        this.store[this.frontIndex] = thing;
         this.storeSize++;
 
 
         //figure out location of frontIndex
-        if(frontIndex == 0) {
-            this.runResizeLogic();
-            frontIndex = this.size() - 1;
+        if(this.frontIndex == 0) {
+            this.frontIndex = this.size() - 1;
         } else {
-            frontIndex--;
+            this.frontIndex--;
         }
+        this.runResizeLogic();
     }
 
+    //Untested
     public void addLast(Item thing){
         this.store[lastIndex] = thing;
         this.storeSize++;
@@ -113,7 +188,7 @@ public class ArrayDeque<Item> {
     }
 
     public boolean isEmpty() {
-        return frontIndex == lastIndex;
+        return this.frontIndex == this.lastIndex;
     }
 
     public void printDeque() {
@@ -129,22 +204,17 @@ public class ArrayDeque<Item> {
     }
 
     //TO-DO
-//    public Item removeFirst() {
-//        if(sentinel.next == sentinel) {
-//            return null;
-//        }
-//
-//        Node<Item> tempNode = sentinel.next;
-//
-//        sentinel.next = sentinel.next.next;
-//        sentinel.next.next.prev = sentinel;
-//
-//        tempNode.next = null;
-//        tempNode.prev = null;
-//        size = size - 1;
-//
-//        return tempNode.item;
-//    }
+    public Item removeFirst() {
+        if(this.frontIndex == this.size() - 1) {
+           this.frontIndex = 0;
+        } else {
+            this.frontIndex++;
+        }
+        Item thingToReturn = this.store[this.frontIndex];
+        this.runResizeLogic();
+
+        return thingToReturn;
+    }
 
     //TO-DO
 //    public Item removeLast() {

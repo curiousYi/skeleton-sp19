@@ -37,8 +37,15 @@ public class ArrayDequeTest {
 
 		int initialSize = arr.size();
 
+
+		String[] options = {"foo", "bar", "baz"};
+		String thingToBeAdded;
+		String[] expectedAnswers = new String[(int) (count+1)];
+
 		for(int i=1; i <= count; i++) {
-			arr.addFirst("foo");
+			thingToBeAdded = options[i % 3];
+			arr.addFirst(thingToBeAdded);
+			expectedAnswers[i] = thingToBeAdded;
 		}
 
 		int sizeAfterAddition = arr.size();
@@ -54,6 +61,16 @@ public class ArrayDequeTest {
 
 		System.out.println("Proportional Sizing Test:");
 		printTestStatus(passed);
+
+		boolean outputCorrect = true;
+		for(double i= count; i>=0; i--) {
+			if(arr.removeFirst() != expectedAnswers[(int) i]) {
+				outputCorrect = false;
+			}
+		}
+
+		System.out.println("Checking addFirst output Test:");
+		printTestStatus(outputCorrect);
 	}
 
 	//check starting size of array is 8
