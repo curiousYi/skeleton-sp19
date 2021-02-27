@@ -30,4 +30,18 @@ public class Palindrome {
 
         return isPalindrome(unDeque(foo));
     }
+
+    public boolean isPalindrome(String word, CharacterComparator cc) {
+        Deque<Character> foo = wordToDeque(word);
+
+        if(word.length() <= 1) {
+            return true;
+        }
+
+        if(cc.equalChars(foo.removeFirst(),foo.removeLast()) == false) {
+            return false;
+        }
+
+        return isPalindrome(unDeque(foo), cc);
+    }
 }

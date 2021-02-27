@@ -36,4 +36,25 @@ public class TestPalindrome {
         assertTrue(palindrome.isPalindrome(isPalindromeString3));
     }
 
+    @Test
+    public void testIsPalindromeOffByOne() {
+        String notAPalindromeString = "abAB";
+        String notAPalindromeString1 = "abC";
+        String isPalindromeString = "abb";
+        String isPalindromeString1 = "abcb";
+        String isPalindromeString2 = "";
+        String isPalindromeString3 = "a";
+        String isPalindromeString4 = "%a&";
+
+        OffByOne cc = new OffByOne();
+
+        assertFalse(palindrome.isPalindrome(notAPalindromeString, cc));
+        assertFalse(palindrome.isPalindrome(notAPalindromeString1, cc));
+        assertTrue(palindrome.isPalindrome(isPalindromeString, cc));
+        assertTrue(palindrome.isPalindrome(isPalindromeString1, cc));
+        assertTrue(palindrome.isPalindrome(isPalindromeString2, cc));
+        assertTrue(palindrome.isPalindrome(isPalindromeString3, cc));
+        assertTrue(palindrome.isPalindrome(isPalindromeString4, cc));
+    }
+
 }
