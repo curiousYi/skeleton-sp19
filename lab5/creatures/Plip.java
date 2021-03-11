@@ -1,11 +1,12 @@
 package creatures;
 
+import huglife.Action;
 import huglife.Creature;
 import huglife.Direction;
-import huglife.Action;
 import huglife.Occupant;
+import huglife.HugLifeUtils;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Map;
@@ -35,9 +36,9 @@ public class Plip extends Creature {
      */
     public Plip(double e) {
         super("plip");
-        r = 0;
-        g = 0;
-        b = 0;
+        r = 99;
+        g = 255;
+        b = 76;
         energy = e;
     }
 
@@ -57,7 +58,6 @@ public class Plip extends Creature {
      * that you get this exactly correct.
      */
     public Color color() {
-        g = 63;
         return color(r, g, b);
     }
 
@@ -68,13 +68,25 @@ public class Plip extends Creature {
         // do nothing.
     }
 
+    public void checkEnergy() {
+        if(energy < 0) {
+            energy = 0;
+            g = 63;
+
+        } else if(energy > 2) {
+            energy = 2;
+            g = 255;
+        }
+    }
+
     /**
      * Plips should lose 0.15 units of energy when moving. If you want to
      * to avoid the magic number warning, you'll need to make a
      * private static final variable. This is not required for this lab.
      */
     public void move() {
-        // TODO
+        energy -= 0.15;
+        this.checkEnergy();
     }
 
 
@@ -82,7 +94,9 @@ public class Plip extends Creature {
      * Plips gain 0.2 energy when staying due to photosynthesis.
      */
     public void stay() {
-        // TODO
+        energy += 0.20;
+        this.checkEnergy();
+
     }
 
     /**
@@ -91,7 +105,10 @@ public class Plip extends Creature {
      * Plip.
      */
     public Plip replicate() {
-        return this;
+        double halved = energy / 2;
+        energy = halved;
+
+        return new Plip(halved);
     }
 
     /**
@@ -114,15 +131,28 @@ public class Plip extends Creature {
         // TODO
         // (Google: Enhanced for-loop over keys of NEIGHBORS?)
         // for () {...}
-
-        if (false) { // FIXME
-            // TODO
+        for( Direction dir :neighbors.keySet()) {
+            Occupant occupant = neighbors.get(dir);
+            if(occupant.name() == "empty") {
+                emptyNeighbors.add(dir);
+            } else if(occupant.name() == "clorus") {
+                anyClorus = true;
+            }
         }
+        if(emptyNeighbors.isEmpty() == true ) {
+            return new Action(Action.ActionType.STAY);
+        } else if (this.energy() >= 1.0) {
+            //Rule 2
+            Direction randomEmptyDirection = HugLifeUtils.randomEntry(emptyNeighbors);
 
-        // Rule 2
-        // HINT: randomEntry(emptyNeighbors)
+            return new Action(Action.ActionType.REPLICATE, randomEmptyDirection);
+        }else if (anyClorus) {
+            // Rule 3
+            // HINT: randomEntry(emptyNeighbors)
+            Direction randomEmptyDirection = HugLifeUtils.randomEntry(emptyNeighbors);
 
-        // Rule 3
+            return new Action(Action.ActionType.MOVE, randomEmptyDirection);
+        }
 
         // Rule 4
         return new Action(Action.ActionType.STAY);

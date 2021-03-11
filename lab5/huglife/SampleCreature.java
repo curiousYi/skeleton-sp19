@@ -118,7 +118,6 @@ public class SampleCreature extends Creature {
         if (neighbors.get(Direction.TOP).name().equals("empty") && Math.random() < moveProbability) {
             return new Action(Action.ActionType.MOVE, Direction.TOP);
         } else if (neighbors.get(Direction.BOTTOM).name().equals("empty") && Math.random() < moveProbability) {
-
             return new Action(Action.ActionType.MOVE, Direction.BOTTOM);
         } else if (neighbors.get(Direction.LEFT).name().equals("empty") && Math.random() < moveProbability) {
             return new Action(Action.ActionType.MOVE, Direction.LEFT);
