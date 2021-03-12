@@ -32,7 +32,7 @@ public class TestClorus {
         Plip prey = new Plip(1);
         assertEquals(2, c.energy(),0.01);
         c.attack(prey);
-        assertEquals(2.5, c.energy(),0.01);
+        assertEquals(3, c.energy(),0.01);
     }
 
     @Test
@@ -63,7 +63,6 @@ public class TestClorus {
 
         assertEquals(expected, actual);
 
-
         //If empty space and plips then one will be attacked randomly
         c = new Clorus(1.2);
         HashMap<Direction, Occupant> topEmpty = new HashMap<Direction, Occupant>();
@@ -77,7 +76,6 @@ public class TestClorus {
 
         assertEquals(expected, actual);
 
-
         // Energy >= 1; replicate towards an empty space.
         c = new Clorus(1.2);
         HashMap<Direction, Occupant> topEmptyNoPlip = new HashMap<Direction, Occupant>();
@@ -87,10 +85,9 @@ public class TestClorus {
         topEmptyNoPlip.put(Direction.RIGHT, new Impassible());
 
         actual = c.chooseAction(topEmptyNoPlip);
-        Action unexpected = new Action(Action.ActionType.REPLICATE, Direction.TOP);
+        expected = new Action(Action.ActionType.REPLICATE, Direction.TOP);
 
-        assertNotEquals(unexpected, actual);
-
+        assertEquals(expected, actual);
 
         // Energy < 1; stay.
         c = new Clorus(0.8);
@@ -101,11 +98,9 @@ public class TestClorus {
         topEmptyNoPlip2.put(Direction.RIGHT, new Impassible());
 
         actual = c.chooseAction(topEmptyNoPlip2);
-        unexpected = new Action(Action.ActionType.MOVE, Direction.TOP);
+        expected = new Action(Action.ActionType.MOVE, Direction.TOP);
 
-        assertNotEquals(unexpected, actual);
+        assertNotEquals(expected, actual);
 
-
-        // We don't have Cloruses yet, so we can't test behavior for when they are nearby right now.
     }
 }

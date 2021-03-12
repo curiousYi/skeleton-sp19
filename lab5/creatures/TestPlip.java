@@ -60,7 +60,6 @@ public class TestPlip {
 
         assertEquals(expected, actual);
 
-
         // Energy >= 1; replicate towards an empty space.
         p = new Plip(1.2);
         HashMap<Direction, Occupant> topEmpty = new HashMap<Direction, Occupant>();
