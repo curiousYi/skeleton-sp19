@@ -56,20 +56,12 @@ public class Clorus extends Creature {
         energy += c.energy();
     }
 
-    public void checkEnergy() {
-        if(energy < 0) {
-            energy = 0;
-        }
-    }
-
     public void move() {
         energy -= 0.03;
-        this.checkEnergy();
     }
 
     public void stay() {
         energy -= 0.01;
-        this.checkEnergy();
     }
 
     public Clorus replicate() {

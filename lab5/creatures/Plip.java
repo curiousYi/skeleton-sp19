@@ -71,9 +71,7 @@ public class Plip extends Creature {
 
     public void checkEnergy() {
         if(energy < 0) {
-            energy = 0;
             g = 63;
-
         } else if(energy > 2) {
             energy = 2;
             g = 255;
