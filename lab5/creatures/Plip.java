@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * An implementation of a motile pacifist photosynthesizer.
@@ -149,9 +150,11 @@ public class Plip extends Creature {
         }else if (anyClorus) {
             // Rule 3
             // HINT: randomEntry(emptyNeighbors)
-            Direction randomEmptyDirection = HugLifeUtils.randomEntry(emptyNeighbors);
+            if((new Random()).nextDouble() < 0.5) {
+                Direction randomEmptyDirection = HugLifeUtils.randomEntry(emptyNeighbors);
 
-            return new Action(Action.ActionType.MOVE, randomEmptyDirection);
+                return new Action(Action.ActionType.MOVE, randomEmptyDirection);
+            }
         }
 
         // Rule 4
