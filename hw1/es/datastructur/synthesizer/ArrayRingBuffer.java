@@ -19,9 +19,14 @@ public class ArrayRingBuffer<T>  {
      * Create a new ArrayRingBuffer with the given capacity.
      */
     public ArrayRingBuffer(int capacity) {
+        rb = (T[])new Object[capacity];
+        first = 0;
+        last = 0;
+        fillCount = 0;
         // TODO: Create new array with capacity elements.
         //       first, last, and fillCount should all be set to 0.
     }
+
 
     /**
      * Adds x to the end of the ring buffer. If there is no room, then
@@ -30,6 +35,17 @@ public class ArrayRingBuffer<T>  {
     public void enqueue(T x) {
         // TODO: Enqueue the item. Don't forget to increase fillCount and update
         //       last.
+
+        // TODO: check if we are full
+
+        rb[last] = x;
+        last = last + 1;
+        fillCount = fillCount + 1;
+        //check if we are full
+        if(last == rb.length) {
+            last = 0;
+        }
+        //TODO our check to see if first or last we've hit the bounds
         return;
     }
 
@@ -40,7 +56,12 @@ public class ArrayRingBuffer<T>  {
     public T dequeue() {
         // TODO: Dequeue the first item. Don't forget to decrease fillCount and
         //       update first.
-        return null;
+        T output = rb[first];
+        first++;
+        if(first == rb.length) {
+            first = 0;
+        }
+        return output;
     }
 
     /**
@@ -50,6 +71,13 @@ public class ArrayRingBuffer<T>  {
     public T peek() {
         // TODO: Return the first item. None of your instance variables should
         //       change.
+        if(fillCount > 0 ) {
+            if(last == 0) {
+                return rb[rb.length - 1];
+            } else {
+            return rb[last - 1];
+            }
+        }
         return null;
     }
 
