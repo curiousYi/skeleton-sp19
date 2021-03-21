@@ -24,19 +24,29 @@ public class TestArrayRingBuffer {
             assertEquals(arr.dequeue(), (Integer) i);
         }
 
-
-        //test what to do if dequeu empty?
-
-        //
-
-
-
-
     }
 
+    @Test(expected = RuntimeException.class)
+    public void testBounded() {
+        ArrayRingBuffer<Integer> arr = new ArrayRingBuffer<Integer>(5);
+        arr.enqueue(3);
 
-    //test it stores one thing
-    //test it stores 2 things
 
-    //test that we hit a limit slash exception is thrown
+        for (int i = 3; i < 3 + 4; i++) {
+            arr.enqueue(i);
+        }
+        arr.enqueue(8);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testCannotDequeueEmpty() {
+        ArrayRingBuffer<Integer> arr = new ArrayRingBuffer<Integer>(5);
+        arr.dequeue();
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testCannotPeekEmpty() {
+        ArrayRingBuffer<Integer> arr = new ArrayRingBuffer<Integer>(5);
+        arr.peek();
+    }
 }

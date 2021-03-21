@@ -1,4 +1,7 @@
 package es.datastructur.synthesizer;
+import com.sun.tools.internal.ws.wsdl.document.jaxws.Exception;
+import org.junit.Test;
+
 import java.util.Iterator;
 
 //TODO: Make sure to that this class and all of its methods are public
@@ -20,13 +23,12 @@ public class ArrayRingBuffer<T>  {
      */
     public ArrayRingBuffer(int capacity) {
         rb = (T[])new Object[capacity];
-        first = 0;
-        last = 0;
+        first = capacity/2;
+        last = first;
         fillCount = 0;
         // TODO: Create new array with capacity elements.
         //       first, last, and fillCount should all be set to 0.
     }
-
 
     /**
      * Adds x to the end of the ring buffer. If there is no room, then
@@ -37,6 +39,9 @@ public class ArrayRingBuffer<T>  {
         //       last.
 
         // TODO: check if we are full
+        if(fillCount == rb.length) {
+            throw new RuntimeException("Ring buffer overflow");
+        }
 
         rb[last] = x;
         last = last + 1;
@@ -56,6 +61,10 @@ public class ArrayRingBuffer<T>  {
     public T dequeue() {
         // TODO: Dequeue the first item. Don't forget to decrease fillCount and
         //       update first.
+
+        if(fillCount == 0) {
+            throw new RuntimeException("Ring buffer underflow");
+        }
         T output = rb[first];
         first++;
         if(first == rb.length) {
@@ -70,15 +79,16 @@ public class ArrayRingBuffer<T>  {
      */
     public T peek() {
         // TODO: Return the first item. None of your instance variables should
-        //       change.
+        //       change;
         if(fillCount > 0 ) {
             if(last == 0) {
                 return rb[rb.length - 1];
             } else {
             return rb[last - 1];
             }
+        } else {
+            throw new RuntimeException("Ring buffer underflow");
         }
-        return null;
     }
 
     // TODO: When you get to part 4, implement the needed code to support
