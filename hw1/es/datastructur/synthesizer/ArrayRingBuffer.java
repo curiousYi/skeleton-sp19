@@ -8,7 +8,7 @@ import java.util.Iterator;
 //TODO: Make sure to add the override tag for all overridden methods
 //TODO: Make sure to make this class implement BoundedQueue<T>
 
-public class ArrayRingBuffer<T>  {
+public class ArrayRingBuffer<T> implements BoundedQueue<T> {
     /* Index for the next dequeue or peek. */
     private int first;
     /* Index for the next enqueue. */
@@ -43,6 +43,10 @@ public class ArrayRingBuffer<T>  {
             throw new RuntimeException("Ring buffer overflow");
         }
 
+        if(fillCount == 0) {
+            last = first;
+        }
+
         rb[last] = x;
         last = last + 1;
         fillCount = fillCount + 1;
@@ -70,6 +74,7 @@ public class ArrayRingBuffer<T>  {
         if(first == rb.length) {
             first = 0;
         }
+        fillCount = fillCount - 1;
         return output;
     }
 
@@ -89,6 +94,14 @@ public class ArrayRingBuffer<T>  {
         } else {
             throw new RuntimeException("Ring buffer underflow");
         }
+    }
+
+    public int capacity() {
+        return rb.length;
+    }
+
+    public int fillCount() {
+        return fillCount;
     }
 
     // TODO: When you get to part 4, implement the needed code to support
