@@ -51,7 +51,7 @@ public class GuitarString {
         //       Do not call StdAudio.play().
         double sample = buffer.dequeue();
         double nextSample = buffer.peek();
-        double newDouble = ((sample + nextSample) / 2) * 0.996;
+        double newDouble = 0.996 * 0.5 * (sample + nextSample);
 
         buffer.enqueue(newDouble);
     }

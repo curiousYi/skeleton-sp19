@@ -86,11 +86,7 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
         // TODO: Return the first item. None of your instance variables should
         //       change;
         if(fillCount > 0 ) {
-            if(last == 0) {
-                return rb[rb.length - 1];
-            } else {
-            return rb[last - 1];
-            }
+            return rb[first];
         } else {
             throw new RuntimeException("Ring buffer underflow");
         }
