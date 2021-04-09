@@ -119,7 +119,7 @@ public class Percolation {
                 for(int bottomCol = 0; bottomCol < grid.length; bottomCol++) {
                     if(isFull(grid.length - 1, bottomCol)) {
                         int coordTopConnectedCoords = mapRowColToConnectedStructCoords(0, topCol);
-                        int coordBottomConnectedCoords = mapRowColToConnectedStructCoords(grid.length, bottomCol);
+                        int coordBottomConnectedCoords = mapRowColToConnectedStructCoords(grid.length - 1, bottomCol);
 
                         if(connectedDS.connected(coordTopConnectedCoords, coordBottomConnectedCoords)) {
                             return true;
