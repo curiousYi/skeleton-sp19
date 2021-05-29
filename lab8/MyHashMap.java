@@ -1,11 +1,13 @@
 import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.LinkedList;
+
 
 public class MyHashMap<K, V> implements Map61B<K, V> {
     int size = 0;
     HashSet<K> keys = new HashSet<K>();
-    V[] buckets;
+    LinkedList<Entry>[] buckets;
 
     /** Returns the value corresponding to KEY or null if no such value exists. */
     public V get(K key) {
@@ -21,7 +23,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     @Override
     public int size() {
-                    return size;
+       return size;
     }
 
     /** Removes all of the mappings from this map. */
@@ -31,6 +33,10 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 //        list = null;
     }
 
+    /** determines bucket position **/
+    public int calcBucketPos(K key) {
+        return key.hashCode() % buckets.length;
+    }
     /**
      * Inserts the key-value pair of KEY and VALUE into this dictionary,
      * replacing the previous value associated to KEY, if any.
@@ -38,18 +44,51 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     public void put(K key, V val) {
         keys.add(key);
 
-//        if (list != null) {
-//            Entry lookup = list.get(key);
-//            if (lookup == null) {
-//                list = new Entry(key, val, list);
-//                size = size + 1;
-//            } else {
-//                lookup.val = val;
-//            }
-//        } else {
-//            list = new Entry(key, val, list);
-//            size = size + 1;
-//        }
+        //determine bucket
+        int bucketPosition = calcBucketPos(key);
+
+        //check if bucket is empty if empty then do arrayList
+        //if not empty put it at the end of the arrayList
+        //increment size
+        if(buckets[bucketPosition] == null) {
+            buckets[bucketPosition] = new LinkedList();
+
+            Entry entry = new Entry(key, val);
+
+            buckets[bucketPosition].add(entry);
+            size++;
+        } else {
+            Entry curr;
+            Entry prev;
+
+            LinkedList<Entry> ll = buckets[bucketPosition];
+
+            for(int i = 0; i < ll.size(); i++){
+                curr = ll.get(i);
+
+                if(curr.key == key) {
+                    curr.val = val;
+                    i = ll.size() * 2;
+                } else if ( i == ll.size() -1 ) {
+                    ll.add(new Entry(key, val));
+                    size++;
+                }
+            }
+        }
+    }
+
+    private class Entry {
+        K key;
+        V val;
+
+        /**
+         * Stores KEY as the key in this key-value pair, VAL as the value, and
+         * NEXT as the next node in the linked list.
+         */
+        Entry(K k, V v) {
+            this.key = k;
+            this.val = v;
+        }
     }
 
     /**
@@ -57,10 +96,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * key of some key-value pair.
      */
     public boolean containsKey(K key) {
-//        if (list == null) {
-//            return false;
-//        }
-//        return list.get(key) != null;
+        return keys.contains(key);
     }
 
     @Override
