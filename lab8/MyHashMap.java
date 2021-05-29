@@ -11,14 +11,22 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     /** Returns the value corresponding to KEY or null if no such value exists. */
     public V get(K key) {
-//        if (list == null) {
-//            return null;
-//        }
-//        Entry lookup = list.get(key);
-//        if (lookup == null) {
-//            return null;
-//        }
-//        return lookup.val;
+        if(keys.contains(key) == false) {
+            return null;
+        }
+        int bucketPosition = calcBucketPos(key);
+        Entry curr;
+        LinkedList<Entry> ll = buckets[bucketPosition];
+        curr = ll.get(0);
+
+        for(int i = 1; i < ll.size(); i++){
+            curr = ll.get(i);
+
+            if(curr.key == key) {
+                i = ll.size();
+            }
+        }
+        return curr.val;
     }
 
     @Override
@@ -59,7 +67,6 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
             size++;
         } else {
             Entry curr;
-            Entry prev;
 
             LinkedList<Entry> ll = buckets[bucketPosition];
 
