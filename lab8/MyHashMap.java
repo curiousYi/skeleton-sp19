@@ -5,6 +5,7 @@ import java.util.HashSet;
 public class MyHashMap<K, V> implements Map61B<K, V> {
     int size = 0;
     HashSet<K> keys = new HashSet<K>();
+    V[] buckets;
 
     /** Returns the value corresponding to KEY or null if no such value exists. */
     public V get(K key) {
@@ -20,8 +21,8 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     @Override
     public int size() {
-//                    return size;
-                                }
+                    return size;
+    }
 
     /** Removes all of the mappings from this map. */
     @Override
@@ -67,55 +68,13 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         return keys.iterator();
     }
 
-    public Set<K> keySet() {
-        //return set of keys
-
-    }
-
     /**
      * Keys and values are stored in a linked list of Entry objects.
      * This variable stores the first pair in this linked list.
      */
     private Entry list;
 
-    /**
-     * Represents one node in the linked list that stores the key-value pairs
-     * in the dictionary.
-     */
-    private class Entry {
 
-        /**
-         * Stores KEY as the key in this key-value pair, VAL as the value, and
-         * NEXT as the next node in the linked list.
-         */
-        Entry(K k, V v, Entry n) {
-            key = k;
-            val = v;
-            next = n;
-        }
-
-        /**
-         * Returns the Entry in this linked list of key-value pairs whose key
-         * is equal to KEY, or null if no such Entry exists.
-         */
-        Entry get(K k) {
-            if (k != null && k.equals(key)) {
-                return this;
-            }
-            if (next == null) {
-                return null;
-            }
-            return next.get(k);
-        }
-
-        /** Stores the key of the key-value pair of this node in the list. */
-        K key;
-        /** Stores the value of the key-value pair of this node in the list. */
-        V val;
-        /** Stores the next Entry in the linked list. */
-        Entry next;
-
-    }
 
     /** An iterator that iterates over the keys of the dictionary. */
 //    private class HashMapIter implements Iterator<K> {
@@ -158,7 +117,6 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     @Override
     public Set<K> keySet() {
-                         throw new UnsupportedOperationException();
-                                                                   }
-
+        return keys;
+    }
 }
