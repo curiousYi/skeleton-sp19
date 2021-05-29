@@ -13,6 +13,7 @@ public class BST<Key extends Comparable<Key>> {
 
     /**
      * Returns the number of keys in this BST.
+     *
      * @return the number of keys in this BST
      */
     public int size() {
@@ -22,9 +23,9 @@ public class BST<Key extends Comparable<Key>> {
     /**
      * Does this BST contain the given key?
      *
-     * @param  key the key
+     * @param key the key
      * @return {@code true} if this BST contains {@code key} and
-     *         {@code false} otherwise
+     * {@code false} otherwise
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
     public boolean contains(Key key) {
@@ -35,7 +36,7 @@ public class BST<Key extends Comparable<Key>> {
     /**
      * Inserts the specified key into the BST.
      *
-     * @param  key the key
+     * @param key the key
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
     public void add(Key key) {
@@ -47,7 +48,7 @@ public class BST<Key extends Comparable<Key>> {
      * Removes the specified key and its associated value from this BST
      * (if the key is in this BST).
      *
-     * @param  key the key
+     * @param key the key
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
     public void deleteTakingSuccessor(Key key) {
@@ -61,14 +62,17 @@ public class BST<Key extends Comparable<Key>> {
     }
 
 
-    /** Returns a random item from the BST. */
+    /**
+     * Returns a random item from the BST.
+     */
     public Key getRandomKey() {
         return getRandomNode(root).key;
     }
 
 
-    /** Private methods and variables follow. There's no need to read
-     *  any of this.
+    /**
+     * Private methods and variables follow. There's no need to read
+     * any of this.
      */
 
     private Node root;             // root of BST
@@ -89,11 +93,11 @@ public class BST<Key extends Comparable<Key>> {
         if (x == null) return null;
 
         int cmp = key.compareTo(x.key);
-        if      (cmp < 0) x.left  = deleteTakingSuccessor(x.left,  key);
+        if (cmp < 0) x.left = deleteTakingSuccessor(x.left, key);
         else if (cmp > 0) x.right = deleteTakingSuccessor(x.right, key);
         else {
             if (x.right == null) return x.left;
-            if (x.left  == null) return x.right;
+            if (x.left == null) return x.right;
             Node t = x;
             x = min(t.right); // x points at successor
             x.right = deleteMin(t.right); // successor points at right tree as if it had been deleted
@@ -107,11 +111,11 @@ public class BST<Key extends Comparable<Key>> {
         if (x == null) return null;
 
         int cmp = key.compareTo(x.key);
-        if      (cmp < 0) x.left  = deleteTakingRandom(x.left,  key);
+        if (cmp < 0) x.left = deleteTakingRandom(x.left, key);
         else if (cmp > 0) x.right = deleteTakingRandom(x.right, key);
         else {
             if (x.right == null) return x.left;
-            if (x.left  == null) return x.right;
+            if (x.left == null) return x.right;
             boolean random = RandomGenerator.getRandomBoolean();
             if (random) { // use successor with 50% chance
                 Node t = x;
@@ -143,7 +147,7 @@ public class BST<Key extends Comparable<Key>> {
 
     private Node min(Node x) {
         if (x.left == null) return x;
-        else                return min(x.left);
+        else return min(x.left);
     }
 
     /**
@@ -159,10 +163,12 @@ public class BST<Key extends Comparable<Key>> {
 
     private Node max(Node x) {
         if (x.right == null) return x;
-        else                 return max(x.right);
+        else return max(x.right);
     }
 
-    /** Gets a random node in the tree. */
+    /**
+     * Gets a random node in the tree.
+     */
     private Node getRandomNode(Node t) {
         int leftSize = t.left == null ? 0 : t.left.size;
         int index = RandomGenerator.getRandomInt(t.size);
@@ -179,9 +185,9 @@ public class BST<Key extends Comparable<Key>> {
     private Node add(Node x, Key key) {
         if (x == null) return new Node(key, 1);
         int cmp = key.compareTo(x.key);
-        if      (cmp < 0) x.left  = add(x.left,  key);
+        if (cmp < 0) x.left = add(x.left, key);
         else if (cmp > 0) x.right = add(x.right, key);
-        else              ; // do nothing, key already exists
+        else ; // do nothing, key already exists
         x.size = 1 + size(x.left) + size(x.right);
         return x;
     }
@@ -196,8 +202,10 @@ public class BST<Key extends Comparable<Key>> {
         root = deleteMin(root);
     }
 
-    /** Returns the root of a tree with the minimum of x deleted.
-     *  That is, if I am the minimum, return my right child! */
+    /**
+     * Returns the root of a tree with the minimum of x deleted.
+     * That is, if I am the minimum, return my right child!
+     */
     private Node deleteMin(Node x) {
         if (x.left == null) return x.right;
         x.left = deleteMin(x.left);
@@ -233,17 +241,38 @@ public class BST<Key extends Comparable<Key>> {
         if (key == null) throw new IllegalArgumentException("calls get() with a null key");
         if (x == null) return false;
         int cmp = key.compareTo(x.key);
-        if      (cmp < 0) return contains(x.left, key);
+        if (cmp < 0) return contains(x.left, key);
         else if (cmp > 0) return contains(x.right, key);
-        else              return true;
+        else return true;
     }
 
 
     /**
      * Returns true if this BST is empty.
+     *
      * @return {@code true} if this BST is empty; {@code false} otherwise
      */
     private boolean isEmpty() {
         return size() == 0;
+    }
+
+    private int totalDepth() {
+        return totalDepth(root, 0);
+    }
+
+    private int totalDepth(Node x, int currentDepth){
+        if(x == null) {
+            return 0;
+        }
+
+        return currentDepth + totalDepth(x.left, currentDepth+1) + totalDepth(x.right, currentDepth+1);
+    }
+
+    /**
+     * Calculates the average depth of a node in a BST
+     * @return double
+     */
+    public double averageDepth() {
+        return (double) totalDepth() / size();
     }
 }

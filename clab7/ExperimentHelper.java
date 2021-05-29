@@ -15,7 +15,24 @@ public class ExperimentHelper {
      *  N = 8, OIPL: 13
      */
     public static int optimalIPL(int N) {
-        return 0;
+//        int count = N;
+//        int cumulativePaths = 0;
+//        int currentHeight = 0;
+//        int numberOfNodesForLevel = 0;
+//
+//        for(int level = 1; level <= (Math.log10(N) / Math.log10(2)); level++) {
+//            if ( level == (Math.floor(Math.log10(N)/Math.log10(2)))) {
+//                numberOfNodesForLevel = N - (int) (Math.pow(2.0, (double) level) - 1);
+//            } else {
+//                numberOfNodesForLevel = //total nodes at this height - total nodes at previous level height
+//            }
+//            //Height * number of nodes
+//            cumulativePaths += currentHeight * (numberOfNodesForLevel);
+//            currentHeight += 1;
+//        }
+//
+//        return cumulativePaths;
+        return 1;
     }
 
     /** Returns the average depth for nodes in an optimal BST of
