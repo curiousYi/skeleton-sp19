@@ -73,7 +73,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         LinkedList<Entry> llRef;
         Entry ref;
         //map old buckets
-        for(int i = 0; i < buckets.length; i++) {
+        for(int i = 0; i < oldBuckets.length; i++) {
             llRef = oldBuckets[i];
             if(llRef != null) {
                 for (int j = 0; j < llRef.size(); j++) {
