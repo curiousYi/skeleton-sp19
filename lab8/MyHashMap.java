@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 
 public class MyHashMap<K, V> implements Map61B<K, V> {
-    int size = 0;
     int startingBucketSize = 16;
     HashSet<K> keys = new HashSet<K>();
     LinkedList<Entry>[] buckets;
@@ -13,8 +12,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     //TO-DO create the additional constructors
     public MyHashMap() {
+        this.startingBucketSize = 16;
         this.loadFactor = 0.75;
-        this.buckets = new LinkedList[startingBucketSize];
+        this.buckets = new LinkedList[this.startingBucketSize];
     }
 
     public MyHashMap(int initialSize) {
@@ -59,7 +59,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     @Override
     public void clear() {
         keys = new HashSet<K>();
-        size = 0;
+        this.buckets = new LinkedList[this.startingBucketSize];
 
         //TO-DO clear out the buckets janitor-style
         //clear out the buckets
@@ -85,12 +85,16 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     }
 
     public void checkAndPossiblyResizeBuckets() {
-        if(size+1 >= loadFactor * this.buckets.length){
+        if(this.size()+1 >= loadFactor * this.buckets.length){
             resizeBuckets();
         }
     }
     /** determines bucket position **/
     public int calcBucketPos(K key) {
+        int hashCode = key.hashCode();
+        if(hashCode < 0) {
+            return (-1 * hashCode) % buckets.length;
+        }
         return key.hashCode() % buckets.length;
     }
     /**
@@ -115,7 +119,6 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
             Entry entry = new Entry(key, val);
 
             buckets[bucketPosition].add(entry);
-            size++;
         } else {
             Entry curr;
 
@@ -129,7 +132,6 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
                     i = ll.size() * 2;
                 } else if ( i == ll.size() -1 ) {
                     ll.add(new Entry(key, val));
-                    size++;
                 }
             }
         }
