@@ -52,7 +52,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     @Override
     public int size() {
-       return size;
+       return keys.size();
     }
 
     /** Removes all of the mappings from this map. */
