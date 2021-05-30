@@ -6,8 +6,28 @@ import java.util.LinkedList;
 
 public class MyHashMap<K, V> implements Map61B<K, V> {
     int size = 0;
+    int startingBucketSize = 16;
     HashSet<K> keys = new HashSet<K>();
     LinkedList<Entry>[] buckets;
+    double loadFactor;
+
+    //TO-DO create the additional constructors
+    public MyHashMap() {
+        this.loadFactor = 0.75;
+        this.buckets = new LinkedList[startingBucketSize];
+    }
+
+    public MyHashMap(int initialSize) {
+        this.startingBucketSize = initialSize;
+        this.loadFactor = 0.75;
+        this.buckets = new LinkedList[this.startingBucketSize];
+    }
+
+    public MyHashMap(int initialSize, double loadFactor) {
+        this.startingBucketSize = initialSize;
+        this.loadFactor = loadFactor;
+        this.buckets = new LinkedList[this.startingBucketSize];
+    };
 
     /** Returns the value corresponding to KEY or null if no such value exists. */
     public V get(K key) {
@@ -19,6 +39,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         LinkedList<Entry> ll = buckets[bucketPosition];
         curr = ll.get(0);
 
+        //implicity expecting to always get an Entry
         for(int i = 1; i < ll.size(); i++){
             curr = ll.get(i);
 
@@ -37,10 +58,37 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     /** Removes all of the mappings from this map. */
     @Override
     public void clear() {
+        keys = new HashSet<K>();
+        size = 0;
+
+        //TO-DO clear out the buckets janitor-style
+        //clear out the buckets
 //        size = 0;
 //        list = null;
     }
 
+    public void resizeBuckets() {
+        LinkedList<Entry>[] oldBuckets = buckets;
+        buckets = new LinkedList[buckets.length * 2];
+        LinkedList<Entry> llRef;
+        Entry ref;
+        //map old buckets
+        for(int i = 0; i < buckets.length; i++) {
+            llRef = oldBuckets[i];
+            if(llRef != null) {
+                for (int j = 0; j < llRef.size(); j++) {
+                    ref = llRef.get(j);
+                    put(ref.key, ref.val);
+                }
+            }
+        }
+    }
+
+    public void checkAndPossiblyResizeBuckets() {
+        if(size+1 >= loadFactor * this.buckets.length){
+            resizeBuckets();
+        }
+    }
     /** determines bucket position **/
     public int calcBucketPos(K key) {
         return key.hashCode() % buckets.length;
@@ -51,6 +99,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     public void put(K key, V val) {
         keys.add(key);
+
+        //checkAndResizeBuckets
+        checkAndPossiblyResizeBuckets();
 
         //determine bucket
         int bucketPosition = calcBucketPos(key);
