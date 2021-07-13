@@ -1,30 +1,77 @@
 package bearmaps;
 
+import static org.junit.Assert.*;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
-/*
-    Add positive functional tests for each method
-    1. contains
-    2. add
-    3. getSmallest
-    4. removeSmallest.
-    5. size()
-    6. changePriority()
-
-    Add negative or zero functionaltest
-     1. contains
-    2. add
-    3. getSmallest
-    4. removeSmallest.
-    5. size()
-    6. changePriority()
-
-    Add edge-case functional test
- */
 public class ArrayHeapMinPQTest {
 
-    //test contains works
-    //test contains handles null case
-    //test contains handles
+    /*
+        Null case
+     */
+
+    /*   1
+        2 3
+       4  5
+
+       verify getSmallest works
+       remove and then verify it gives it in the order we expect
+       Math.random
+
+
+     */
+//    @Test
+//    public void sanityTestForNoElementGetSmallest() {
+//        //TO-DO figure out how to test for  an exception error
+//        try {
+//            ArrayHeapMinPQ<Double> minHeap = new ArrayHeapMinPQ();
+//            double smallest = minHeap.getSmallest();
+//        } catch (e) {
+//        }
+//    }
+
+//    @Test
+//    public void sanityTestForNoElementGetSmallest() {
+//        //TO-DO figure out how to test for  an exception error
+//        try {
+//            ArrayHeapMinPQ<Double> minHeap = new ArrayHeapMinPQ();
+//            double smallest = minHeap.getSmallest();
+//        } catch (e) {
+//        }
+//    }
+
+    @Test
+    public void sanityTestForSingleElementContainsMethod() {
+        int randomInteger = (int)Math.random()*(100);
+        ArrayHeapMinPQ<Integer> minHeap = new ArrayHeapMinPQ();
+
+        minHeap.add(randomInteger, (double) randomInteger);
+
+        assertTrue(minHeap.contains(randomInteger));
+
+        //add number a bunch of test
+
+    }
+
+    @Test
+    public void sanityTestForSingleElementAddMethod() {
+        int randomInteger = (int)(Math.random()*(100));
+        ArrayHeapMinPQ<Integer> minHeap = new ArrayHeapMinPQ();
+
+        minHeap.add(randomInteger, (double) randomInteger);
+
+        System.out.println("Working");
+        System.out.println(randomInteger);
+        System.out.println(minHeap.getSmallest());
+        assertEquals((int)minHeap.getSmallest(), randomInteger);
+
+        //add number a bunch of test
+
+    }
+//    @Test
+//    public void sanityTestForSingleElement() {
+//        Math.
+//        //add number a bunch of test
+//
+//    }
+
 }

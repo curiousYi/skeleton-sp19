@@ -37,7 +37,7 @@ public class NaiveMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (size() == 0) {
             throw new NoSuchElementException("PQ is empty");
         }
-        return Collections.min(items).getItem();
+        return Collections.min(items).item;
     }
 
     @Override
